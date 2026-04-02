@@ -10,8 +10,9 @@
 
 ## 기술 선택
 
-- Python 3.11+
-- `discord.py`
+- Node.js 22+
+- TypeScript
+- `discord.js`
 - SQLite
 
 초기 버전은 빠르게 시작할 수 있도록 SQLite 기반으로 구성했습니다. 운영하면서 필요해지면 MySQL/PostgreSQL 또는 기존 `naimed-kepler-api`와의 연동 구조로 확장할 수 있습니다.
@@ -20,23 +21,19 @@
 
 ```text
 naimed-kepler-bot/
-├── src/naimed_kepler_bot/
-│   ├── cogs/
-│   │   ├── employee.py
-│   │   ├── governance.py
-│   │   ├── performance.py
-│   │   └── reward.py
+├── src/
 │   ├── services/
-│   │   ├── employee_service.py
-│   │   ├── governance_service.py
-│   │   ├── performance_service.py
-│   │   ├── reward_service.py
-│   │   └── storage.py
-│   ├── bot.py
-│   ├── config.py
-│   └── main.py
+│   │   ├── employee-service.ts
+│   │   ├── governance-service.ts
+│   │   ├── performance-service.ts
+│   │   └── reward-service.ts
+│   ├── bot.ts
+│   ├── config.ts
+│   ├── db.ts
+│   └── index.ts
 ├── .env.example
-├── pyproject.toml
+├── package.json
+├── tsconfig.json
 └── README.md
 ```
 
@@ -44,11 +41,9 @@ naimed-kepler-bot/
 
 ```bash
 cd /Users/maru/adiavic/naimed-kepler-bot
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -e .
+npm install
 cp .env.example .env
-python -m naimed_kepler_bot.main
+npm run dev
 ```
 
 ## Docker 실행
@@ -67,9 +62,11 @@ Oracle Cloud 배포 절차는 [deploy.oracle.md](/Users/maru/adiavic/naimed-kepl
 `.env`에서 아래 값을 설정하세요.
 
 - `DISCORD_BOT_TOKEN`: Discord bot token
-- `DISCORD_GUILD_ID`: slash command를 동기화할 서버 ID
-- `BOT_ADMIN_ROLE_IDS`: 포인트 지급/평가 기록 권한이 있는 역할 ID 목록
+- `DISCORD_GUILD_ID`: 선택값, 넣으면 특정 서버에 빠르게 반영되는 guild command로 등록
+- `BOT_ADMIN_ROLE_IDS`: 사원 등록, KP 지급, 안건 생성/마감 권한이 있는 역할 ID 목록
 - `DATABASE_PATH`: SQLite 파일 경로
+
+`DISCORD_GUILD_ID`를 비워두면 글로벌 명령어로 등록됩니다. 이 경우 Discord에 반영되기까지 시간이 조금 걸릴 수 있습니다.
 
 ## 제공 명령어
 

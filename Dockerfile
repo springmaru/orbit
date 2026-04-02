@@ -1,17 +1,16 @@
-FROM python:3.11-slim
-
-ENV PYTHONDONTWRITEBYTECODE=1
-ENV PYTHONUNBUFFERED=1
+FROM node:22-bookworm-slim
 
 WORKDIR /app
 
-COPY pyproject.toml README.md ./
+COPY package.json package-lock.json* ./
+RUN npm install
+
+COPY tsconfig.json ./
 COPY src ./src
+COPY README.md ./
 
-RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir .
-
+RUN npm run build
 RUN mkdir -p /app/data
 
-CMD ["python", "-m", "naimed_kepler_bot.main"]
+CMD ["npm", "run", "start"]
 
